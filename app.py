@@ -1,42 +1,64 @@
 import streamlit as st
+import time
 
-from query import ask_llm_answer
+# Function loader
+try:
+    from query import ask_llm_answer
+except ImportError:
+    def ask_llm_answer(query):
+        time.sleep(2) 
+        return f"Mock response to: {query}"
 
-
+# --- Page Configuration ---
 st.set_page_config(page_title="My Chatbot", page_icon="🤖")
-st.title("🤖 My Chatbot")
+st.title("🤖 Assistant")
 
+# --- 1. Session State Initialization ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
-if "is_responding" not in st.session_state:
-    st.session_state.is_responding = False
 
+# Initialize the 'disabled' flag to False (Input is active by default)
+if "disabled" not in st.session_state:
+    st.session_state.disabled = False
 
-for sender, message in st.session_state.messages:
-    with st.chat_message("user" if sender == "You" else "assistant"):
-        st.markdown(message)
+# --- 2. Helper Function to Lock UI ---
+# This runs immediately when the user hits Enter, before the script reloads
+def disable_input():
+    st.session_state.disabled = True
 
+# --- Display Chat History ---
+for message in st.session_state.messages:
+    # (Includes the fix for the tuple error you saw earlier)
+    if isinstance(message, tuple):
+        message = {"role": message[0], "content": message[1]}
+        
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-with st.form("chat-input", clear_on_submit=True):
-    user_input = st.text_input("You:", "", disabled=st.session_state.is_responding)
-    send = st.form_submit_button(
-        "Send",
-        disabled=st.session_state.is_responding or not user_input.strip(),
-        type="primary",
-    )
+# --- 3. Locked User Input ---
+# We bind the 'disabled' state to the widget and use 'on_submit' to trigger the lock
+if prompt := st.chat_input("Ask a question...", 
+                           disabled=st.session_state.disabled, 
+                           on_submit=disable_input):
+    
+    # Display user message
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
-if send and user_input:
-    prompt = user_input.strip()
-    st.session_state.messages.append(("You", prompt))
-    status = st.empty()
-    status.info("Received. Bot is thinking...")
-    st.session_state.is_responding = True
+    # Display bot response
+    with st.chat_message("assistant"):
+        with st.spinner("Bot is thinking..."):
+            try:
+                response = ask_llm_answer(prompt)
+            except Exception as e:
+                response = f"An error occurred: {e}"
+            
+            st.markdown(response)
 
-    with st.spinner("Bot is writing a reply..."):
-        response = ask_llm_answer(prompt)
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
-    st.session_state.messages.append(("Bot", response))
-    st.session_state.is_responding = False
-    status.success("Reply ready.")
-    status.empty()
-    st.experimental_rerun()
+    # --- 4. Unlock and Refresh ---
+    # Now that processing is done, unlock the input and rerun to update the UI
+    st.session_state.disabled = False
+    st.rerun()
