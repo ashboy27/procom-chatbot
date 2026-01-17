@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from typing import Iterable, List, Optional, Sequence, Tuple, Union
 from dotenv import load_dotenv
 from supabase import Client, create_client
