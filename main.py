@@ -1,31 +1,43 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 
 from query import ask_llm_answer
 from setting import get_logger
 
+
 logger = get_logger(__name__)
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI(title="PROCOM Chatbot API")
 
-@app.route("/health", methods=["GET"])
-def health():
-    return jsonify({"status": "ok"})
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.route("/ask", methods=["GET"])
-def ask():
-    question = request.args.get("question", "").strip()
 
-    if not question:
-        return jsonify({"error": "question is required"}), 400
+@app.get("/health")
+async def health() -> dict:
+    return {"status": "ok"}
 
+
+@app.get("/ask")
+async def ask(
+    question: str = Query(..., min_length=1, description="User question")
+) -> dict:
     try:
         answer = ask_llm_answer(question)
-        return jsonify({
-            "question": question,
-            "answer": answer
-        })
-    except Exception:
+        return {"question": question, "answer": answer}
+    except Exception as exc:  # pylint: disable=broad-except
         logger.exception("Failed to answer question")
-        return jsonify({"error": "Failed to answer question"}), 500
+        raise HTTPException(
+            status_code=500, detail="Failed to answer question"
+        ) from exc
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
