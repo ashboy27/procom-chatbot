@@ -1,5 +1,6 @@
 import os
 import re
+from typing import List, Dict, Optional
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -32,9 +33,18 @@ def vector_search(query: str, top_k: int = 3):
     return results.data
 
 
-def ask_llm_answer(question: str):
+def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None):
     question = question or ""
     logger.info("Processing question length=%d", len(question))
+
+    history = history or []
+    recent_history = history[-5:]
+    try:
+        history_lines = [f"{m.get('role', 'user').capitalize()}: {m.get('content', '')}" for m in recent_history]
+        history_text = "\n".join(history_lines)
+    except Exception:
+        logger.exception("Failed to format conversation history: %s", history)
+        history_text = ""
 
     if len(question.strip()) > 100:
         logger.warning("Question rejected due to excessive length")
@@ -96,10 +106,13 @@ def ask_llm_answer(question: str):
     """
 
     human_prompt = f"""
+    Conversation history (most recent last):
+    {history_text if history_text else 'None'}
+
     User Question: {question}
     Context:
     {context_text}
-    Provide a concise and correct answer based on the above context.
+    Provide a concise and correct answer based on the above context and, when relevant, the recent conversation history.
     """
 
     prompt = ChatPromptTemplate(

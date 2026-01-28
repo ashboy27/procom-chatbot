@@ -32,7 +32,8 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("Ask a question...", 
                            disabled=st.session_state.disabled, 
                            on_submit=disable_input):
-    
+
+    history = st.session_state.messages[-5:]
 
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -40,7 +41,7 @@ if prompt := st.chat_input("Ask a question...",
     with st.chat_message("assistant"):
         with st.spinner("Bot is thinking..."):
             try:
-                response = ask_llm_answer(prompt)
+                response = ask_llm_answer(prompt, history=history)
             except Exception as e:
                 # Keep the error details in logs but show a friendly message to the user
                 response = "Sorry, I ran into a glitch. Please try again in a moment."

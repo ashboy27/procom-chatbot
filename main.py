@@ -1,5 +1,8 @@
+from typing import List, Optional
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 from query import ask_llm_answer
 from setting import get_logger
@@ -22,19 +25,30 @@ app.add_middleware(
 async def health() -> dict:
     return {"status": "ok"}
 
+class HistoryMessage(BaseModel):
+    role: str = Field(..., description="user or assistant")
+    content: str = Field(..., description="message content")
 
-@app.get("/ask")
-async def ask(
-    question: str = Query(..., min_length=1, description="User question")
-) -> dict:
+
+class AskRequest(BaseModel):
+    question: str = Field(..., min_length=1, description="User question")
+    history: List[HistoryMessage] = Field(
+        ..., description="Prior messages, most recent last; only last 5 are used"
+    )
+
+
+@app.post("/ask")
+async def ask(body: AskRequest):
     try:
-        answer = ask_llm_answer(question)
-        return {"question": question, "answer": answer}
-    except Exception as exc:  # pylint: disable=broad-except
+        answer = ask_llm_answer(body.question, history=body.history)
+        return {"question": body.question, "answer": answer}
+    except Exception:
         logger.exception("Failed to answer question")
-        raise HTTPException(
-            status_code=500, detail="Failed to answer question"
-        ) from exc
+        return {
+            "question": body.question,
+            "answer": "Sorry I got too tired while cooking, try again or after some time, meanwhile you can ask your queries on our Contact Us Page: www.procom26.com/contact",
+        }
+
 
 
 if __name__ == "__main__":
