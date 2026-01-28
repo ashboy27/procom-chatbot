@@ -1,0 +1,8 @@
+The Electrical Engineering Category in PROCOM has 7 exciting modules
+Robo Wars (EE Competition) is a combat robotics challenge where participants build tough and agile robots designed to attack, withstand damage, and win matches by knockout or within a fixed time limit.
+Robo Sumo (EE Competition) features autonomous or remote-controlled robots competing to push opponents out of a circular arena, testing strength, control, and strategic movement.
+Robo Soccer (EE Competition) is a robotics competition where teams design striker and defender robots to score goals while protecting their own net, showcasing coordination and mechanical skill.
+Line Following Robot (EE Competition) challenges participants to design a fully autonomous robot capable of accurately navigating a predefined track with curves in the shortest possible time.
+Robo Parkour (EE Competition) is a precision-based navigation challenge where robots traverse a grid arena and collect objects appearing at specific coordinates based on pre-announced instructions.
+Speed Soldering (EE Competition) is a hands-on electronics challenge where participants race to manually assemble and solder a circuit on a vero board with emphasis on speed and accuracy.
+Circuit Design (EE Competition) focuses on digital logic, requiring participants to design, implement, and test circuits using core components such as logic gates, flip-flops, and adders.

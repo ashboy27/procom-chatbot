@@ -1,0 +1,5 @@
+The Artificial Intelligence Competitions track at PROCOMd'26 features five specialized modules designed to evaluate creativity, reasoning, and applied AI skills across modern problem domains.AI in Borderland (AI Competition) challenges participants to apply intelligent decision making and AI logic in dynamic and uncertain scenarios.
+AI Grand Prix (AI Competition) is a racing based challenge where participants build and optimize AI agents for performance and control.
+LangChain Mysteries (AI Competition) focuses on large language models and agent workflows, testing reasoning, tool usage, and LLM orchestration.
+ChatCraft (AI Competition) is an NLP focused competition where participants build intelligent conversational systems and text based AI solutions.
+Vibe Coding (AI Competition) centers on prompt engineering, where participants design effective prompts to control and guide AI behavior.

@@ -1,0 +1,2 @@
+Food Fest
+A lively array of food stalls invites participants to unwind, connect with friends, and recharge for the next adventure. The Food Fest adds a social dimension to the event, making networking informal and enjoyable alongside the technical activities.

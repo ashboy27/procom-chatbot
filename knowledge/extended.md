@@ -1,0 +1,15 @@
+Assistant Director Computing: Ashar Usmani serves as Assistant Director Computing for PROCOM'26 and oversees technical operations related to competitions and computing infrastructure, ensuring smooth execution of all technology-driven modules and systems.
+Computer Science Competitions Head: Abdul Ahad serves as Computer Science Competitions Head and leads the planning and management of all nine Computer Science competitions, including coordination with problem setters, judges, and competition teams to ensure fair, structured, and high-quality contests.
+Computer Science Competitions Co-Head: Arwa Abbas serves as Computer Science Competitions Co-Head and contributes to the management of CS competitions with a focus on creativity, thematic design, and innovation across competition formats.
+Computer Science Competitions Co-Head: Areeb Ahmed serves as Computer Science Competitions Co-Head and assists in overseeing Computer Science competitions, managing coordination between competition teams and overall event operations.
+Web Development Head: Muhammad Owais serves as Web Development Head and leads the development and maintenance of the official PROCOM'26 website, overseeing the web team and ensuring a reliable, scalable, and user-friendly digital presence.
+Web Development Co-Head (Backend): Fasih Hassan serves as Web Development Co-Head and is responsible for backend development, server-side logic, and database configuration of the PROCOM'26 website, ensuring performance, security, and scalability.
+Web Development Co-Head (Frontend): Muhammad Tashkeel serves as Web Development Co-Head and handles frontend development, focusing on animations, visual effects, and overall user experience design for the PROCOM'26 website.
+Artificial Intelligence Competitions Head: Abdul Rehman Azam serves as Artificial Intelligence Competitions Head and leads all five AI competitions, introducing innovative and creative AI-based modules that expand the scope and impact of AI challenges at PROCOM'26.
+Artificial Intelligence Competitions Co-Head: Muhammad Mufeez serves as Artificial Intelligence Competitions Co-Head and assists in managing AI competitions, coordinating teams, logistics, and competition workflows to ensure smooth execution.
+Artificial Intelligence Competitions Co-Head: Asfand Ahmed serves as Artificial Intelligence Competitions Co-Head and supports the planning and management of AI competitions, with responsibility for team coordination and on-ground execution.
+UI/UX Design Head: Talmeeha Tanweer serves as UI/UX team head responsible
+for leading the UI/UX team and managing smooth user experience on the website.
+UI/UX Design Co-Head: Muhammad Hassan serves as UI/UX team cohead responsible for designing the PROCOM's official website.
+UI/UX Design Co-head: Arsalan Asad serves as UI/UX cohead responsible for working alongside the UI/UX team desiging website and ensuring smooth UX.
+Automations Head: Umar Orakzai serves as Automation Head responsible for handling participants data, and automating payment proofs as well as other technical responsibilities.

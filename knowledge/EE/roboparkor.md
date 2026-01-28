@@ -1,0 +1,1 @@
+Robo Parkour is an Electrical (EE) competition in which robots navigate a grid or matrix arena to collect objects from specified coordinates based on predefined instructions. The competition follows a knockout format with 50% elimination per round, and the final round determines the overall winner.

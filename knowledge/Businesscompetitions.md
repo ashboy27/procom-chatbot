@@ -1,0 +1,4 @@
+There are 3 total competitions in Business Category of PROCOM
+Startup Showdown (Business Competition) is a high-impact pitch competition where participants present startup ideas, business models, and growth strategies to judges, transforming concepts into investor-ready ventures.
+Fast Stock Exchange (Business Competition) is a real-time market simulation that challenges participants to analyze market volatility, manage virtual portfolios, and make strategic trading decisions under dynamic conditions.
+Data Verse (Business Competition) is an analytics-focused challenge where participants convert raw business data into actionable insights, reports, and dashboards to support strategic decision-making.

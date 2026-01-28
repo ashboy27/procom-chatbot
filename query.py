@@ -3,33 +3,24 @@ from typing import List
 import re
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_voyageai import VoyageAIEmbeddings
 
-from setting import get_logger, get_supabase_client
+from setting import get_logger, get_supabase_client,get_voyage_embedding
 
 
 logger = get_logger(__name__)
-supabase = get_supabase_client()
-llm = ChatGroq(api_key=os.getenv("GROQ_API_KEY"), model="openai/gpt-oss-120b")
-embedding_model = VoyageAIEmbeddings(
-    api_key=os.getenv("VOYAGE_API_KEY"),
-    model="voyage-4-large",
-)
-
-
-def embed_query(text: str) -> List[float]:
-    return embedding_model.embed_query(text)
-
-
 def vector_search(query: str, top_k: int = 3):
 
-    query_vector = embed_query(query)
+    query_vector = get_voyage_embedding(query)
     logger.debug("Query vector length: %s", len(query_vector))
+    supabase = get_supabase_client()
     results = supabase.rpc(
         "match_knowledge_chunks",
         {"query_embedding": query_vector, "match_count": top_k},
     ).execute()
+    logger.info("Vector search returned %d results", len(results.data))
+    logger.info("Results: ", results.data)
     return results.data
 
 
@@ -96,6 +87,9 @@ def ask_llm_answer(question):
         ]
     )
 
+    llm =ChatGoogleGenerativeAI(api_key=os.getenv("GEMINI_API_KEY"), model="gemini-2.5-flash")
+
+
     chain = prompt | llm | StrOutputParser()
     answer = chain.invoke(
         {
@@ -109,6 +103,7 @@ def ask_llm_answer(question):
 
 def main():
     sample_question = "What are cp timings"
+    logger.info("Asking sample question...")
     answer = ask_llm_answer(sample_question)
     logger.info("Q: %s", sample_question)
     logger.info("A: %s", answer)

@@ -1,0 +1,1 @@
+Digital Logic Design (DLD) is an Electrical (EE) competition where participants design, analyze, and implement digital circuits using logic gates and sequential components. The event consists of two paper-based rounds followed by a hardware implementation round, with winners determined by correctness, design quality, and completion speed.

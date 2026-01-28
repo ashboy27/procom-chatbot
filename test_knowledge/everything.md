@@ -8,7 +8,7 @@ PROCOM’26 spans multiple domains such as Computer Science, Artificial Intellig
 The event attracts thousands of students and industry partners, fostering a collaborative environment for learning, innovation, and career growth.
 Competitions Category
 Computer Science module details can be found at https://procom26.com/modules/cs-competitions
-Artificial Intelligence module details can be found at https://procom26.com/modules/ai-competitions
+Artificial Intelligence A module details can be found at https://procom26.com/modules/ai-competitions
 Electrical Engineering module details can be found at https://procom26.com/modules/ee-competitions
 Business Competitions module details can be found at https://procom26.com/modules/business
 General Competitions module details can be found at https://procom26.com/modules/general
@@ -115,7 +115,7 @@ Acts as a supernode or root server of reality.
 Incorrect triggering results in The Glitch, a catastrophic system violation.
 Universes and Their Symbolism
 Each universe corresponds directly to competition domains and system concepts.
-Universe Name and corresponding symbolic meaning |
+Universe Name and corresponding symbolic meaning
 Erevos-901 is origin, core logic
 Paradox-Verse is time conflicts, contradictions
 DataVerse is data handling, databases
@@ -123,7 +123,7 @@ PixelVerse user interface, design, visuals
 PhantomVerse is hidden bugs, deception
 InfraVerse is infrastructure, networks
 CodeVerse is competitive programming 
-ObsidiVerse secrets, locked systems |
+ObsidiVerse secrets, locked systems
 ShadowVerse is frozen states, deadlocks
 AntiVerse is absolute control
 Each competition round is thematically mapped to one of these universes. The mapping is intentional and consistent with the lore.
@@ -277,10 +277,10 @@ All participants must register for the competitions and adhere strictly to the g
 GENERAL FAQS
 Are outsiders allowed? Yes
 Will there be classes on event day. No there wont be any classes
-Can I register in two clashing competition. For CS competitions you will not be able to leave the competition venue before the competition ends so no for CS Competitions
+Can I register in two clashing competition. For CS competitions you will not be able to leave the competition venue before the competition ends so no for CS Competitions. For AI competitions any competition in which AI is not allowed you cannot leave the venue so no for them.
 Is there food for participants? No participants will have to buy their own food
-Can I use FAST NUCES point buses to come to university even though I'm not from university? Yes you may but only for competition day
-Can I get a refund? Depends. Kindly email us at procom.net@nu.edu.pk
+Can I use FAST NUCES point buses to come to university even though I'm not from university? Yes you may but only for competition day. Point routes will soon be announced on our social media.
+Can I get a refund? Depends. Kindly email us at procom.net@nu.edu.pk with reason for refund along with payment receipt.
 Can you tell me location of FAST? Refer to our contact us page. www.procom26.com/contact
 Do I have to bring my own laptop? Depends on the competition refer to the competitions rulebook.
 I cannot find the rulebook. Refer to https://procom26.com/registrations and select the competition category to locate its rulebook.

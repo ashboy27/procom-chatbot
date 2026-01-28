@@ -1,26 +1,18 @@
-import os
-from langchain_voyageai import VoyageAIEmbeddings
-from setting import get_supabase_client, get_logger
-from langchain_community.document_loaders import DirectoryLoader
+from setting import get_supabase_client, get_logger, get_voyage_embedding
+from langchain_community.document_loaders import DirectoryLoader,TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+
 logger = get_logger(__name__)
-embedding_voyage = VoyageAIEmbeddings(api_key=os.getenv("VOYAGE_API_KEY"), model="voyage-4-large")
-
-def embed_text(text):
-    """Return embedding vector for a string"""
-    return embedding_voyage.embed_query(text) 
-
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
 def load_documents(path: str):
-    logger.info(f"Loading documents from {path}...")
 
+    logger.info(f"Loading documents from {path}...")
     loader = DirectoryLoader(
         path,
-        glob="*.md",
+        glob="**/*.md",
         loader_cls=TextLoader,
-        recursive=False
+        recursive=True
     )
 
     documents = loader.load()
@@ -30,16 +22,15 @@ def load_documents(path: str):
 def split_text(documents):
 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=100,
+        chunk_size=2500,
+        chunk_overlap=1000,
         length_function=len,
     )
     chunks = text_splitter.split_documents(documents)
     return chunks
 
-def ingest_documents_to_supabase():
+def ingest_documents_to_supabase(path: str):
     
-    path = "test_knowledge"
     documents = load_documents(path)
     logger.info(f"Loaded {len(documents)} documents.")
     chunks = split_text(documents)
@@ -47,7 +38,7 @@ def ingest_documents_to_supabase():
     supabase = get_supabase_client()
 
     for i, chunk in enumerate(chunks):
-        embedding_vector = embed_text(chunk.page_content)
+        embedding_vector = get_voyage_embedding(chunk.page_content)
         data = {
             "content": chunk.page_content,
             "metadata": chunk.metadata,
@@ -55,11 +46,6 @@ def ingest_documents_to_supabase():
         }
         supabase.table("knowledge_chunks").insert(data).execute()
 
-
-def main():
-    ingest_documents_to_supabase()
+ingest_documents_to_supabase("knowledge")
  
 
-
-
-main()

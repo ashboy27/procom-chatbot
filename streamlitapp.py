@@ -1,3 +1,4 @@
+#This is just to test chatbot UI locally on streamlit
 import streamlit as st
 import time
 try:
@@ -36,8 +37,6 @@ if prompt := st.chat_input("Ask a question...",
     with st.chat_message("user"):
         st.markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    # Display bot response
     with st.chat_message("assistant"):
         with st.spinner("Bot is thinking..."):
             try:
@@ -48,6 +47,5 @@ if prompt := st.chat_input("Ask a question...",
             st.markdown(response)
 
     st.session_state.messages.append({"role": "assistant", "content": response})
-
     st.session_state.disabled = False
     st.rerun()

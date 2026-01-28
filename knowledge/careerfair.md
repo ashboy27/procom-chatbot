@@ -1,0 +1,2 @@
+Career Fair
+PROCOM'26 connects students directly with top employers. Attendees can submit resumes, participate in interviews, and explore hiring and internship opportunities, bridging the gap between academic learning and industry careers.
