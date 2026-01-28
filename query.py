@@ -4,7 +4,7 @@ from typing import List, Dict, Optional
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-
+from langchain_groq import ChatGroq
 from setting import get_logger, get_supabase_client, get_voyage_embedding
 
 logger = get_logger(__name__)
@@ -123,8 +123,8 @@ def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None
         ]
     )
 
-    llm = ChatGoogleGenerativeAI(api_key=os.getenv("GEMINI_API_KEY"), model="gemini-2.5-flash")
-
+    #llm = ChatGoogleGenerativeAI(api_key=os.getenv("GEMINI_API_KEY"), model="gemini-2.5-flash")
+    llm = ChatGroq(api_key=os.getenv("GROQ_API_KEY"), model="llama-3.3-70b-versatile")
     chain = prompt | llm | StrOutputParser()
     try:
         answer = chain.invoke(
