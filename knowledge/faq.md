@@ -26,6 +26,10 @@ Mobile phones are strictly prohibited during competitions unless explicitly stat
 I want to change some things in my registration? Email us at procom.net@nu.edu.pk with registration details and required change.
 Is there any concert or social event in PROCOM. No Astaghfirullah concert is strictly haram focus on the competitions
 Who is main artist. Concerts are haram dear so please avoid this question.
+Can school students participate? Yes they definitely can and are encouraged to participate in PROCOM'26.
+I am a private student what do I write in institute? You can write private student in that area.
+I cant find my instituite in the institute list
+You can type your institute name and click add to add your institute
 Links
 Main website https://procom26.com/
 Contact Us https://procom26.com/contact

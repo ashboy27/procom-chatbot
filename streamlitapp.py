@@ -42,7 +42,8 @@ if prompt := st.chat_input("Ask a question...",
             try:
                 response = ask_llm_answer(prompt)
             except Exception as e:
-                response = f"An error occurred: {e}"
+                # Keep the error details in logs but show a friendly message to the user
+                response = "Sorry, I ran into a glitch. Please try again in a moment."
             
             st.markdown(response)
 
