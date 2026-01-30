@@ -34,7 +34,7 @@ def vector_search(query: str, top_k: int = 3):
 
 
 def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None):
-    question = question or ""
+    question = question
     logger.info("Processing question length=%d", len(question))
 
     history = history or []
@@ -124,28 +124,41 @@ def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None
     )
 
     #llm = ChatGoogleGenerativeAI(api_key=os.getenv("GEMINI_API_KEY"), model="gemini-2.5-flash")
-    llm = ChatGroq(api_key=os.getenv("GROQ_API_KEY"), model="llama-3.3-70b-versatile")
-    chain = prompt | llm | StrOutputParser()
-    try:
-        answer = chain.invoke(
-            {
-                "system_prompt": system_prompt,
-                "human_prompt": human_prompt
-            }
-        )
-    except Exception:
-        logger.exception("LLM invocation failed for question %r", question)
-        return (
-            "Sorry I got too tired while cooking, try again or try after some time, "
-            "meanwhile you can ask your queries on the numbers provided on our Contact "
-            "Us Page(www.procom26.com/contact)"
-        )
+    llm1 = ChatGroq(api_key=os.getenv("GROQ_API_KEY_1"), model="llama-3.3-70b-versatile")
+    llm2 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_2"),model = "llama-3-70b-versatile")
+    llm3 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_3"),model = "llama-3-70b-versatile")
+    llm4 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_4"),model = "llama-3-70b-versatile")
+    llm_pool = [llm1, llm2, llm3, llm4]
 
-    return answer
+    import random
+    random.shuffle(llm_pool)
+    for i,current_llm in enumerate(llm_pool):
+        try:
+            chain = prompt | current_llm | StrOutputParser()
+            answer = chain.invoke(
+                {
+                    "system_prompt": system_prompt,
+                    "human_prompt": human_prompt
+                }
+            )
+
+            return answer
+
+        except Exception as e:
+            logger.warning(f"LLM attempt {i+1}/{len(llm_pool)} failed: {e}")
+            continue
+
+    logger.error("All LLM invocations failed.")
+    return (
+        "Sorry I got too tired while cooking, try again or try after some time, "
+        "meanwhile you can ask your queries on the numbers provided on our Contact "
+        "Us Page(www.procom26.com/contact)"
+    )
 
 
 
 def main():
+    
     sample_question = "What are cp timings"
     logger.info("Asking sample question...")
     try:
@@ -157,4 +170,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("here")
     main()
