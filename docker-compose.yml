@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: probot-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - GROQ_API_KEY_1=${GROQ_API_KEY_1}
+      - GROQ_API_KEY_2=${GROQ_API_KEY_2}
+      - GROQ_API_KEY_3=${GROQ_API_KEY_3}
+      - GROQ_API_KEY_4=${GROQ_API_KEY_4}
+      - VOYAGE_API_KEY=${VOYAGE_API_KEY}
+    volumes:
+      - ./knowledge:/app/knowledge
+      - ./knowledge_base.db:/app/knowledge_base.db
+    command: python -m uvicorn src.main:app --host 0.0.0.0 --port 3000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: probot-frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend

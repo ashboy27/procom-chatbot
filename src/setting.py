@@ -1,10 +1,12 @@
-#Helper functions and settings for the project
 import logging
 import os
-from typing import List, Optional, Tuple
+from typing import List, Optional
+
 from dotenv import load_dotenv
 from supabase import Client, create_client
 from langchain_voyageai import VoyageAIEmbeddings
+
+
 class Settings:
 
     def __init__(self, env_file: Optional[str] = None) -> None:
@@ -21,21 +23,16 @@ class Settings:
             self._supabase = create_client(self.supabase_url, self.supabase_key)
         return self._supabase
     
-    def get_voyage_embedding(self,model_name: str = "voyage-4-large", text: str = "") -> List[float]:
-       
+    def get_voyage_embedding(self, model_name: str = "voyage-4-large", text: str = "") -> List[float]:
         api_key = os.getenv("VOYAGE_API_KEY")
         if not api_key:
             raise ValueError("VOYAGE_API_KEY not found")
-        model = model_name
-        embedding_model = VoyageAIEmbeddings(api_key=api_key, model=model)
+        embedding_model = VoyageAIEmbeddings(api_key=api_key, model=model_name)
         return embedding_model.embed_query(text)
 
 
 
 settings = Settings()
-
-
-import logging
 
 def get_logger(name: str):
     logging.basicConfig(
@@ -51,4 +48,4 @@ def get_supabase_client() -> Client:
     return settings.get_supabase_client()
 
 def get_voyage_embedding(text: str, model_name: str = "voyage-4-large") -> List[float]:
-    return settings.get_voyage_embedding(model_name=model_name,text=text)
+    return settings.get_voyage_embedding(model_name=model_name, text=text)

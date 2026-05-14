@@ -1,52 +1,115 @@
 import os
 import re
-from typing import List, Dict, Optional
+import random
+from typing import Any, Dict, List, Optional
+
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_groq import ChatGroq
-from setting import get_logger, get_supabase_client, get_voyage_embedding
+from src.setting import get_logger, get_supabase_client, get_voyage_embedding
+from src.vector_store import VectorStore
 
 logger = get_logger(__name__)
 
+GROQ_MODEL_NAME = "llama-3.3-70b-versatile"
+vector_store = None
+
+
+def getvector_store() -> VectorStore:
+    global vector_store
+    if vector_store is None:
+        vector_store = VectorStore("knowledge_base.db")
+    return vector_store
+
+
+def load_groq_llms() -> List[ChatGroq]:
+    key_pattern = re.compile(r"^GROQ_API_KEY_(\d+)$")
+    discovered_keys = []
+
+    for env_name, env_value in os.environ.items():
+        match = key_pattern.match(env_name)
+        if not match:
+            continue
+
+        key_index = int(match.group(1))
+        if env_value:
+            discovered_keys.append((key_index, env_value))
+
+    discovered_keys.sort(key=lambda item: item[0])
+
+    return [
+        ChatGroq(api_key=api_key, model=GROQ_MODEL_NAME)
+        for _, api_key in discovered_keys
+    ]
+
 
 def vector_search(query: str, top_k: int = 3):
+
     try:
         query_vector = get_voyage_embedding(query)
         logger.debug("Query vector length: %s", len(query_vector))
-    except Exception:
+    except Exception as e:
         logger.exception("Embedding generation failed for query %r", query)
-        raise
+        return []
 
-    supabase = get_supabase_client()
+    use_supabase = os.getenv("SUPABASE_URL") is not None
+    
+    if use_supabase:
+        try:
+            supabase = get_supabase_client()
+            results = supabase.rpc(
+                "match_knowledge_chunks",
+                {"query_embedding": query_vector, "match_count": top_k},
+            ).execute()
+            logger.info("Vector search returned %d results from Supabase", len(results.data))
+            return results.data
+        except Exception:
+            logger.warning("Supabase search failed, falling back to local store")
+
     try:
-        results = supabase.rpc(
-            "match_knowledge_chunks",
-            {"query_embedding": query_vector, "match_count": top_k},
-        ).execute()
+        store = getvector_store()
+        results = store.search(query_vector, top_k=top_k)
+        logger.info("Vector search returned %d results from local store", len(results))
+        return results
     except Exception:
-        logger.exception("Supabase RPC match_knowledge_chunks failed for query %r", query)
-        raise
-
-    logger.info("Vector search returned %d results", len(results.data))
-    logger.debug("Vector search raw results: %s", results.data)
-    return results.data
+        logger.exception("Vector search failed for query %r", query)
+        return []
 
 
-def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None):
-    question = question
+def normalize_history_message(message: Any) -> Dict[str, str]:
+    if isinstance(message, dict):
+        return {
+            "role": str(message.get("role", "user")),
+            "content": str(message.get("content", "")),
+        }
+
+    if hasattr(message, "model_dump"):
+        data = message.model_dump()
+        return {
+            "role": str(data.get("role", "user")),
+            "content": str(data.get("content", "")),
+        }
+
+    return {
+        "role": str(getattr(message, "role", "user")),
+        "content": str(getattr(message, "content", "")),
+    }
+
+
+def ask_llm_answer(question: str, history: Optional[List[Any]] = None):
     logger.info("Processing question length=%d", len(question))
 
     history = history or []
     recent_history = history[-5:]
     try:
-        history_lines = [f"{m.get('role', 'user').capitalize()}: {m.get('content', '')}" for m in recent_history]
+        normalized_history = [normalize_history_message(message) for message in recent_history]
+        history_lines = [f"{m['role'].capitalize()}: {m['content']}" for m in normalized_history]
         history_text = "\n".join(history_lines)
     except Exception:
         logger.exception("Failed to format conversation history: %s", history)
         history_text = ""
 
-    if len(question.strip()) > 100:
+    if len(question.strip()) > 200:
         logger.warning("Question rejected due to excessive length")
         return "Look mate i am as confused as you are but that does not mean you ask a chatbot this long question. This is not a ranting platform."
 
@@ -115,30 +178,27 @@ def ask_llm_answer(question: str, history: Optional[List[Dict[str, str]]] = None
     Provide a concise and correct answer based on the above context and, when relevant, the recent conversation history.
     """
 
-    prompt = ChatPromptTemplate(
-
+    prompt = ChatPromptTemplate.from_messages(
         [
-            "system","{system_prompt}",
-            "user","{human_prompt}"
+            ("system", "{system_prompt}"),
+            ("user", "{human_prompt}"),
         ]
     )
 
-    #llm = ChatGoogleGenerativeAI(api_key=os.getenv("GEMINI_API_KEY"), model="gemini-2.5-flash")
-    llm1 = ChatGroq(api_key=os.getenv("GROQ_API_KEY_1"), model="llama-3.3-70b-versatile")
-    llm2 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_2"),model = "llama-3-70b-versatile")
-    llm3 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_3"),model = "llama-3-70b-versatile")
-    llm4 = ChatGroq(api_key = os.getenv("GROQ_API_KEY_4"),model = "llama-3-70b-versatile")
-    llm_pool = [llm1, llm2, llm3, llm4]
+    llm_pool = load_groq_llms()
 
-    import random
+    if not llm_pool:
+        logger.error("No GROQ_API_KEY_<n> environment variables were found.")
+        return "Groq API keys are not configured. Please set at least GROQ_API_KEY_1."
+
     random.shuffle(llm_pool)
-    for i,current_llm in enumerate(llm_pool):
+    for i, current_llm in enumerate(llm_pool):
         try:
             chain = prompt | current_llm | StrOutputParser()
             answer = chain.invoke(
                 {
                     "system_prompt": system_prompt,
-                    "human_prompt": human_prompt
+                    "human_prompt": human_prompt,
                 }
             )
 

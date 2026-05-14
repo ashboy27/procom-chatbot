@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROCOM Chatbot</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <main class="shell">
+        <section class="hero">
+            <p class="eyebrow">PROCOM Assistant</p>
+            <h1>Ask questions about PROCOM, competitions, and event details.</h1>
+            <p class="subtext">This frontend sends your current chat history to the backend so replies can use the
+                recent context.</p>
+        </section>
+
+        <section class="chat-card">
+            <div id="messages" class="messages" aria-live="polite"></div>
+
+            <form id="chat-form" class="composer">
+                <textarea id="question" rows="3" placeholder="Type your question here..." autocomplete="off"></textarea>
+                <div class="actions">
+                    <button type="button" id="clear-btn" class="secondary">Clear chat</button>
+                    <button type="button" id="update-kb-btn" class="secondary"
+                        title="Update knowledge base from markdown files">Update Knowledge</button>
+                    <button type="submit" id="send-btn">Send</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>
