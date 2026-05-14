@@ -1,3 +1,5 @@
+#My Project
+[![CI](https://github.com/ashboy27/procom-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/ashboy27/procom-chatbot/actions/workflows/ci.yml)
 # Probot
 
 Probot is a chatbot designed to serve PROCOM attendees with quick answers about events, competitions, schedules, and general PROCOM information.
