@@ -49,6 +49,15 @@ This setup exists **exclusively for local testing and development.** The product
 **Important:** If you are integrating this chatbot into a production environment or official website, configure Supabase credentials and the system will automatically use the cloud database instead.
 
 
+## CI Notes
+
+The repository uses two CI paths:
+
+- **Default CI** runs on every push and pull request. It checks Python syntax, runs the fast test suite, and builds both Docker images.
+- **Integration CI** runs only when live credentials are available on a protected branch or a manual workflow run. It uses real `GROQ_API_KEY_1` and `VOYAGE_API_KEY` secrets to smoke test the chatbot response path end to end.
+
+This keeps the normal PR pipeline fast and safe, while still allowing a real API-backed chatbot check when needed.
+
 
 ## Run From Start to Finish
 
