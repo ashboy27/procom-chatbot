@@ -41,7 +41,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && secrets.GROQ_API_KEY_1 != '' && secrets.VOYAGE_API_KEY != ''
+    if: github.event_name != 'pull_request'
 
     env:
       GROQ_API_KEY_1: ${{ secrets.GROQ_API_KEY_1 }}
@@ -62,5 +62,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run integration smoke test
+        if: env.GROQ_API_KEY_1 != '' && env.VOYAGE_API_KEY != ''
         run: |
           pytest -m integration
+
+      - name: Skip integration smoke test
+        if: env.GROQ_API_KEY_1 == '' || env.VOYAGE_API_KEY == ''
+        run: echo "Skipping integration smoke test because live credentials are not available."
