@@ -9,6 +9,9 @@ jobs:
   unit:
     runs-on: ubuntu-latest
 
+    env:
+      PYTHONPATH: ${{ github.workspace }}
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -44,6 +47,7 @@ jobs:
     if: github.event_name != 'pull_request'
 
     env:
+      PYTHONPATH: ${{ github.workspace }}
       GROQ_API_KEY_1: ${{ secrets.GROQ_API_KEY_1 }}
       VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
 
