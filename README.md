@@ -6,6 +6,9 @@ Probot is a chatbot designed to serve PROCOM attendees with quick answers about 
 
 PROCOM is the flagship event of FAST NUCES Karachi, and this chatbot helps reduce the need for repetitive manual query handling by giving attendees a direct conversational interface for common questions.
 
+## Video of what the bot looked like on the official website
+https://github.com/user-attachments/assets/1afb2ca2-76ea-47bc-9095-df37aa726a26
+
 ## Impact
 
 - **Reduction in manual queries:** 86%. Attendees now resolve questions via the chatbot instead of reaching out to staff.
